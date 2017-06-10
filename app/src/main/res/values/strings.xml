@@ -2,4 +2,7 @@
     <string name="app_name">HelloUser</string>
     <string name="intro">Интро</string>
     <string name="main_activity">Главная активити</string>
+    <string name="phone_number">Ваш номер телефона</string>
+    <string name="login">Логин</string>
+    <string name="hint">введите номер полностью</string>
 </resources>

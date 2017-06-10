@@ -1,9 +1,14 @@
 package name.yuris.hellouser;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
+    public static Intent createExplicitIntent (Context context){
+        return new Intent(context, MainActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
