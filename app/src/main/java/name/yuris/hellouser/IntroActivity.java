@@ -110,10 +110,13 @@ public class IntroActivity extends AppCompatActivity {
             if(maskFilled){
                 mLoginButton.setEnabled(true);
                 mHintTextView.setVisibility(View.INVISIBLE);
+                Utils.hideKeyBoard(mPhoneEditText, getApplicationContext());
             } else {
                 mLoginButton.setEnabled(false);
                 mHintTextView.setVisibility(View.VISIBLE);
             }
         }
     }
+
+
 }
