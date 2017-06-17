@@ -7,10 +7,19 @@
     tools:context="name.yuris.hellouser.MainActivity">
 
     <TextView
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:id="@+id/hello_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:layout_above="@+id/android_image_view"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/android_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>
