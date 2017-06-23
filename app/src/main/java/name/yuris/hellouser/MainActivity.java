@@ -5,16 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends Activity {
 
     private static final String IMAGE_URL = "http://i.imgur.com/DvpvklR.png";
-    private ImageView mImageView;
+    private static final String EXTRA_USER_LOGIN = "user_login";
 
-    public static Intent createExplicitIntent (Context context){
-        return new Intent(context, MainActivity.class);
+    @BindView(R.id.hello_text_view)
+    TextView mUserLoginTextView;
+
+    public static Intent createExplicitIntent (Context context, String userLogin){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(EXTRA_USER_LOGIN, userLogin);
+        return intent;
     }
 
     @Override
@@ -22,14 +31,23 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mImageView = (ImageView) findViewById(R.id.android_image_view);
+        ButterKnife.bind(this);
+        String userLogin = "Hello,";
+        if (savedInstanceState == null){
+            userLogin += getIntent().getExtras().getString(EXTRA_USER_LOGIN);
+        } else {
+            userLogin += Utils.readUserLogin(this);
+        }
+        mUserLoginTextView.setText(userLogin);
+
+        ImageView imageView= (ImageView) findViewById(R.id.android_image_view);
         Picasso.with(this)
                 .load(IMAGE_URL)
                 .resize(500,500)
                 .centerCrop()
                 .placeholder(R.drawable.progress_animation)
                 .error(R.drawable.error)
-                .into(mImageView);
+                .into(imageView);
     }
 
     @Override
