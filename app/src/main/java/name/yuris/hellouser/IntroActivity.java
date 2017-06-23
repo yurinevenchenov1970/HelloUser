@@ -36,6 +36,10 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        if (Utils.readIsAlreadyLoggedIn(this)) {
+            goToMainActivity();
+        }
+
         ButterKnife.bind(this);
         initMaskForPhoneField();
         enableLoginButton(false);
@@ -47,7 +51,8 @@ public class IntroActivity extends AppCompatActivity {
     @OnClick(R.id.login_button)
     void login() {
         if(isInputDataCorrect()) {
-            startActivity(MainActivity.createExplicitIntent(getApplicationContext()));
+            goToMainActivity();
+            Utils.writeIsAlreadyLoggedIn(this, true);
         } else{
             Toast.makeText(getApplicationContext(), getString(R.string.invalid_input_data_message), Toast.LENGTH_LONG).show();
         }
@@ -83,6 +88,11 @@ public class IntroActivity extends AppCompatActivity {
     private boolean isInputDataCorrect(){
         return isLoginFieldCorrect && isPhoneFieldCorrect;
     }
+
+    private void goToMainActivity() {
+        startActivity(MainActivity.createExplicitIntent(getApplicationContext()));
+    }
+
     // <<< private methods
 
     private class ValueListener implements MaskedTextChangedListener.ValueListener{

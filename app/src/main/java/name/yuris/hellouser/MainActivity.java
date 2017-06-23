@@ -31,5 +31,10 @@ public class MainActivity extends Activity {
                 .error(R.drawable.error)
                 .into(mImageView);
     }
-}
 
+    @Override
+    public void onBackPressed() {
+        if (Utils.readIsAlreadyLoggedIn(this))
+            super.onBackPressed();
+    }
+}
