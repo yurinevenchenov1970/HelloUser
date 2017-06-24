@@ -19,17 +19,26 @@ import butterknife.OnTextChanged;
 public class IntroActivity extends AppCompatActivity {
 
     private static final int MIN_LOGIN_LENGTH = 5;
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
     @BindView(R.id.hint_text_view)
     TextView mHintTextView;
+
     @BindView(R.id.login_button)
     Button mLoginButton;
+
     @BindView(R.id.login_edit_text)
     EditText mLoginEditText;
+
+    @BindView(R.id.password_edit_text)
+    EditText mPasswordEditText;
+
     @BindView(R.id.edit_text)
     EditText mPhoneEditText;
 
     boolean isLoginFieldCorrect = false;
     boolean isPhoneFieldCorrect = false;
+    boolean isPasswordCorrect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,19 @@ public class IntroActivity extends AppCompatActivity {
     void afterLoginInput(Editable editable) {
         isLoginFieldCorrect = editable.length()>=MIN_LOGIN_LENGTH;
     }
+
+    @OnTextChanged(value = R.id.password_edit_text,
+            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    void afterPasswordInput(Editable editable) {
+        isPasswordCorrect = editable.length()>=MIN_PASSWORD_LENGTH;
+        if(!isPasswordCorrect) {
+            mPasswordEditText.setError("password is easy! Minimum " + MIN_PASSWORD_LENGTH + " digits");
+        } else {
+            mPasswordEditText.setError(null);
+            Utils.writePassword(this, editable.toString());
+        }
+    }
+
     // >>> private methods
 
     private void initMaskForPhoneField(){
@@ -87,7 +109,7 @@ public class IntroActivity extends AppCompatActivity {
 
 
     private boolean isInputDataCorrect(){
-        return isLoginFieldCorrect && isPhoneFieldCorrect;
+        return isLoginFieldCorrect && isPhoneFieldCorrect && isPasswordCorrect;
     }
 
     private void goToMainActivity() {
@@ -102,12 +124,10 @@ public class IntroActivity extends AppCompatActivity {
         public void onTextChanged(boolean maskFilled, String value) {
             isPhoneFieldCorrect = maskFilled;
             if(maskFilled){
-                mLoginButton.setEnabled(true);
                 enableLoginButton(true);
                 mHintTextView.setVisibility(View.INVISIBLE);
                 Utils.hideKeyBoard(mPhoneEditText, getApplicationContext());
             } else {
-                mLoginButton.setEnabled(false);
                 enableLoginButton(false);
                 mHintTextView.setVisibility(View.VISIBLE);
             }
