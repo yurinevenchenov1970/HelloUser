@@ -27,8 +27,7 @@ public class Utils {
     }
 
     public static void writeIsAlreadyLoggedIn(Activity activity, boolean loggedIn) {
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = getEditor(activity);
         editor.putBoolean(IS_LOGGED_IN, loggedIn);
         editor.apply();
     }
@@ -40,8 +39,7 @@ public class Utils {
     }
 
     public static void writeUserLogin(Activity activity, @NonNull String userLogin) {
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = getEditor(activity);
         editor.putString(USER_LOGIN, userLogin);
         editor.apply();
     }
@@ -53,8 +51,7 @@ public class Utils {
     }
 
     public static void writePassword(Activity activity, @NonNull String password) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = getEditor(activity);
         editor.putString(USER_PASSWORD, makeEncryptedPassword(password));
         editor.apply();
     }
@@ -64,6 +61,11 @@ public class Utils {
         String defValue = "rt8sj0d23nMq#2";
         String savedPasswordEncrypted = sharedPreferences.getString(USER_PASSWORD, defValue);
         return getEncryptor().checkPassword(newPassword, savedPasswordEncrypted);
+    }
+
+    private static SharedPreferences.Editor getEditor(Activity activity) {
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        return sharedPreferences.edit();
     }
 
     private static String makeEncryptedPassword(String password) {
