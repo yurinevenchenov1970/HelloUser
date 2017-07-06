@@ -1,5 +1,7 @@
 package name.yuris.hellouser;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static Intent createExplicitIntent (Context context, String userLogin){
         Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra(EXTRA_USER_LOGIN, userLogin);
         return intent;
     }
@@ -69,9 +74,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (Utils.readIsAlreadyLoggedIn(this))
-            super.onBackPressed();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_title))
+                .setMessage(getString(R.string.dialog_message))
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(getString(R.string.no), null)
+                .create();
+        dialog.show();
     }
+
 
     @OnTextChanged(value = R.id.password_edit_text,
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
