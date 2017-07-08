@@ -34,7 +34,7 @@ public class IntroActivity extends AppCompatActivity {
     @BindView(R.id.password_edit_text)
     EditText mPasswordEditText;
 
-    @BindView(R.id.edit_text)
+    @BindView(R.id.phone_edit_text)
     EditText mPhoneEditText;
 
     boolean isLoginFieldCorrect = false;
