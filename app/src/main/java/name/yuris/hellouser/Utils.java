@@ -51,7 +51,8 @@ public class Utils {
     }
 
     public static void writePassword(Activity activity, @NonNull String password) {
-        SharedPreferences.Editor editor = getEditor(activity);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_PASSWORD, makeEncryptedPassword(password));
         editor.apply();
     }
