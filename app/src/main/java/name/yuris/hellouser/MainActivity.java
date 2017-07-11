@@ -36,12 +36,15 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.password_edit_text)
     EditText mPasswordEditText;
 
-    private boolean isPasswordCorrect;
+    @BindView(R.id.avatar_image_view)
+    ImageView mAvatarImageView;
+
+    private boolean mIsPasswordCorrect;
 
     public static Intent createExplicitIntent (Context context, String userLogin){
         Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra(EXTRA_USER_LOGIN, userLogin);
         return intent;
@@ -58,19 +61,18 @@ public class MainActivity extends AppCompatActivity {
         userLogin += getIntent().getExtras().getString(EXTRA_USER_LOGIN, "world");
         mUserLoginTextView.setText(userLogin);
 
-        ImageView imageView= (ImageView) findViewById(R.id.android_image_view);
         Picasso.with(this)
                 .load(IMAGE_URL)
                 .resize(500,500)
                 .centerCrop()
                 .placeholder(R.drawable.progress_animation)
                 .error(R.drawable.error)
-                .into(imageView);
+                .into(mAvatarImageView);
     }
 
     @Override
     public void onBackPressed() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.dialog_title))
                 .setMessage(getString(R.string.dialog_message))
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
@@ -79,17 +81,21 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                 })
-                .setNegativeButton(getString(R.string.no), null)
-                .create();
-        dialog.show();
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 
     @OnTextChanged(value = R.id.password_edit_text,
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     void afterPasswordInput(Editable editable) {
-        isPasswordCorrect = Utils.isPasswordMatching(MainActivity.this, editable.toString());
-        if (isPasswordCorrect) {
+        mIsPasswordCorrect = Utils.isPasswordMatching(MainActivity.this, editable.toString());
+        if (mIsPasswordCorrect) {
             showMainLayout();
         }
     }

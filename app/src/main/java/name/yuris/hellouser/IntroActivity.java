@@ -19,8 +19,8 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class IntroActivity extends AppCompatActivity {
 
-    private static final int MIN_LOGIN_LENGTH = 5;
-    private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final int LOGIN_MIN_LENGTH = 5;
+    private static final int PASSWORD_MIN_LENGTH = 8;
 
     @BindView(R.id.hint_text_view)
     TextView mHintTextView;
@@ -37,9 +37,9 @@ public class IntroActivity extends AppCompatActivity {
     @BindView(R.id.phone_edit_text)
     EditText mPhoneEditText;
 
-    boolean isLoginFieldCorrect = false;
-    boolean isPhoneFieldCorrect = false;
-    boolean isPasswordCorrect = false;
+    boolean mIsLoginFieldCorrect = false;
+    boolean mIsPhoneFieldCorrect = false;
+    boolean mIsPasswordCorrect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,8 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         ButterKnife.bind(this);
-        initMaskForPhoneField();
-        enableLoginButton(false);
+        initPhoneFieldMask();
+        setLoginButtonEnabled(false);
     }
 
     @Override
@@ -64,36 +64,39 @@ public class IntroActivity extends AppCompatActivity {
     @OnClick(R.id.login_button)
     void login() {
         if(isInputDataCorrect()) {
-            Utils.writeUserLogin(this, mLoginEditText.getText().toString());
-            Utils.writeIsAlreadyLoggedIn(this, true);
+            saveData();
             goToMainActivity();
         } else{
             Crouton.makeText(this, getString(R.string.invalid_input_data_message), Style.ALERT).show();
         }
     }
 
+    private void saveData(){
+        Utils.writeUserLogin(this, mLoginEditText.getText().toString());
+        Utils.writeIsAlreadyLoggedIn(this, true);
+    }
 
     @OnTextChanged(value = R.id.login_edit_text,
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     void afterLoginInput(Editable editable) {
-        isLoginFieldCorrect = editable.length()>=MIN_LOGIN_LENGTH;
+        mIsLoginFieldCorrect = editable.length()>= LOGIN_MIN_LENGTH;
     }
 
     @OnTextChanged(value = R.id.password_edit_text,
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     void afterPasswordInput(Editable editable) {
-        isPasswordCorrect = editable.length()>=MIN_PASSWORD_LENGTH;
-        if(!isPasswordCorrect) {
-            mPasswordEditText.setError("password is easy! Minimum " + MIN_PASSWORD_LENGTH + " digits");
-        } else {
+        mIsPasswordCorrect = editable.length()>= PASSWORD_MIN_LENGTH;
+        if(mIsPasswordCorrect) {
             mPasswordEditText.setError(null);
             Utils.writePassword(this, editable.toString());
+        } else {
+            mPasswordEditText.setError("password is easy! Minimum " + PASSWORD_MIN_LENGTH + " digits");
         }
     }
 
     //region private methods
 
-    private void initMaskForPhoneField(){
+    private void initPhoneFieldMask(){
         final MaskedTextChangedListener listener = new MaskedTextChangedListener(
                 "+7 ([000]) [000] [00] [00]",
                 true,
@@ -107,13 +110,13 @@ public class IntroActivity extends AppCompatActivity {
         mPhoneEditText.setHint(listener.placeholder());
     }
 
-    private void enableLoginButton(boolean enabled){
+    private void setLoginButtonEnabled(boolean enabled){
        mLoginButton.setEnabled(enabled);
     }
 
 
     private boolean isInputDataCorrect(){
-        return isLoginFieldCorrect && isPhoneFieldCorrect && isPasswordCorrect;
+        return mIsLoginFieldCorrect && mIsPhoneFieldCorrect && mIsPasswordCorrect;
     }
 
     private void goToMainActivity() {
@@ -126,13 +129,13 @@ public class IntroActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(boolean maskFilled, String value) {
-            isPhoneFieldCorrect = maskFilled;
+            mIsPhoneFieldCorrect = maskFilled;
             if(maskFilled){
-                enableLoginButton(true);
+                setLoginButtonEnabled(true);
                 mHintTextView.setVisibility(View.INVISIBLE);
                 Utils.hideKeyBoard(mPhoneEditText, getApplicationContext());
             } else {
-                enableLoginButton(false);
+                setLoginButtonEnabled(false);
                 mHintTextView.setVisibility(View.VISIBLE);
             }
         }
