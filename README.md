@@ -8,7 +8,7 @@ There are few libs are used in the project:
   1. Input Mask RedMadRobot - for evaluating user input (using Mask on input fields)
   2. Picasso - for insert pictures
   3. ButterKnife - to uncomplicated binding of Views and callbacks injecting (listening to user input)
-  4. Encryption - to safely storing of the Password encrypted
+  4. Jasypt - to safely storing of the Password encrypted
   5. Crouton - to show in-app notifications instead of Toasts
   
   
