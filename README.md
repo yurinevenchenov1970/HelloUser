@@ -11,4 +11,4 @@ There are few libs are used in the project:
   4. Jasypt - to safely storing of the Password encrypted
   5. Crouton - to show in-app notifications instead of Toasts
   
-  
+  ![howitworks](https://user-images.githubusercontent.com/29121233/28184033-6eb9bffc-681a-11e7-827c-c913ce698e60.gif)
